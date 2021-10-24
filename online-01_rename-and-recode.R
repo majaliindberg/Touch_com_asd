@@ -2,12 +2,14 @@ library(readxl)
 library(tidyverse)
 library(summarytools)
 
+raw.data.folder <- '~/OneDrive - Linköpings universitet/projects - in progress/Touch Comm ASD/online survey/Data/'
+
 # Load data without names
-my_data <- read_excel("Data_ASD_8juni.xlsx", 
+my_data <- read_excel(paste0(raw.data.folder,"Data_ASD_8juni.xlsx"), 
                              range = "A3:FJ274", col_names = FALSE)
 
 # Load data names
-data_names <- read_excel("Data_ASD_8juni.xlsx", 
+data_names <- read_excel(paste0(raw.data.folder,"Data_ASD_8juni.xlsx"), 
                              range = "A1:FJ1", col_names = FALSE)
 # Add names to my_data
 names(my_data) <- unlist(data_names[1, ])
