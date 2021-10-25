@@ -20,8 +20,8 @@ if ( !dir.exists('data/primary') ) { dir.create('data/primary') }
 
 raw.data.folder %>% 
   collate_data('comm.*data\\.csv') %>% 
-  write_csv('data/live-comm_collated.csv')
+  write_csv('data/primary/live-comm_collated.csv')
 
 raw.data.folder %>% 
   collate_data('pleas.*data\\.csv') %>% 
-  write_csv('data/live-pleas_collated.csv')
+  write_csv('data/primary/live-pleas_collated.csv')
