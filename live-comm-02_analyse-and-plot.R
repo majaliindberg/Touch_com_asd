@@ -89,9 +89,9 @@ orderedPIDs.liveASD <- live.comm.data %>%
 live.comm.data %>%
   filter(group == 'ASD') %>% 
   confusion_matrix_data(PID)  %>%
-  mutate(exptPID = factor(PID, levels = orderedPIDs.liveASD)) %>% 
+  mutate(PID = factor(PID, levels = orderedPIDs.liveASD)) %>% 
   confusion_matrix_individual_plot(colour.ASD, ylabels = c(orderedCues,'other')) +
-  facet_wrap(. ~ PID, ncol = 5) -> confmat.live.ASD.ind
+  facet_wrap(. ~ PID, nrow = 5) -> confmat.live.ASD.ind
 
 ###. figure live Control ####
 live.comm.data %>%
@@ -108,7 +108,7 @@ live.comm.data %>%
   confusion_matrix_data(PID)  %>%
   mutate(PID = factor(PID, levels = orderedPIDs.liveControl)) %>% 
   confusion_matrix_individual_plot(colour.Control, ylabels = c(orderedCues,'other')) +
-  facet_wrap(. ~ PID, ncol = 5) -> confmat.live.Control.ind
+  facet_wrap(. ~ PID, nrow = 5) -> confmat.live.Control.ind
 
 #### combine figures ####
 
@@ -126,3 +126,15 @@ compare.plot + confmat.live.ASD + confmat.live.Control +
 ggsave('figures/Compare_ASD-vs-Control.svg')
 ggsave('figures/Compare_ASD-vs-Control.pdf')
 
+design.confmat.ind = '
+AABBBBB
+'
+
+quartz(width = 7.8, height = 5.7); plot(1:10)
+confmat.live.ASD.ind +labs(title = 'ASD') + 
+  confmat.live.Control.ind +labs(title = 'Control') +
+  plot_annotation(tag_levels = 'A') +
+  plot_layout(design = design.confmat.ind) 
+
+ggsave('figures/live-comm_confmat-individual.svg')
+ggsave('figures/live-comm_confmat-individual.pdf')
