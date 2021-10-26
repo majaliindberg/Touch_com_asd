@@ -8,7 +8,7 @@ library(psych)
 library(patchwork)
 library(parallel)
 
-source('comm_source.R')
+source('tc-asd_source.R')
 
 #### read data ####
 live.comm.data <- read_csv('data/primary/live-comm_collated.csv', col_types = cols()) 
