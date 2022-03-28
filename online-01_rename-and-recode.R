@@ -1,44 +1,53 @@
-library(readxl)
+# library(readxl)
+library(qualtRics)
 library(tidyverse)
 library(summarytools)
 
-raw.data.folder <- '~/OneDrive - Linköpings universitet/projects - in progress/Touch Comm ASD/online survey/Data/'
+raw_data_folder <- "~/Library/CloudStorage/OneDrive-Linköpingsuniversitet/projects - in progress/Touch Comm ASD/Data/online survey/"
 
-# Load data without names
-my_data <- read_excel(paste0(raw.data.folder,"Data_online_27maj.xlsx"), 
-                             range = "A3:FJ274", col_names = FALSE)
+raw_data_file <- paste0(
+  raw_data_folder,
+  'Communication with social touch in Autism spectrum disorder_March 28, 2022_14.50.csv'
+  )
 
-# Load data names
-data_names <- read_excel(paste0(raw.data.folder,"Data_online_27maj.xlsx"), 
-                             range = "A1:FJ1", col_names = FALSE)
-# Add names to my_data
-names(my_data) <- unlist(data_names[1, ])
-View(my_data)
+raw_data <- read_survey(raw_data_file)
 
 # Just get 100% completed data + remove preview
-prog_data <- my_data %>% filter(Progress == 100)
-prog_data <- prog_data %>% filter(DistributionChannel == "anonymous")
+valid_data <- raw_data %>% 
+  # SCREENING for those who...
+  # are not spam
+  filter(Status != "Spam") %>% 
+  # completed the survey
+  filter(Progress == 100) %>% 
+  # were not part of the testing/preview phase
+  filter(DistributionChannel != "preview") %>% 
+  # give consent
+  filter(Q2 == "Yes, I will participate.") %>% 
+  # are aged 15+
+  filter(Q3 != "under 15") %>% 
+  # do not have a bipolar or psychosis diagnosis
+  filter(Q6 == "No") %>% 
+  # do not regularly take recreational drugs
+  filter(Q8 == "No") %>% 
+  # do not regularly drink 5 or more alcoholic drinks per day
+  filter(Q10 == "No") %>% 
+  # are not interested in participating in the in-person study
+  filter(Q12 == "No") %>% 
+  # can see the video
+  filter(Q15 == "Yes") %>% 
+  # remove variables used for screening
+  select(-c(
+    Status,
+    Progress,
+    DistributionChannel,
+    Finished,
+    Q2, Q3, Q6, Q8, Q10, Q12, Q15
+  ))
 
+# summary table
+valid_data %>% 
+  dfSummary() %>% view
 
-# Create data frame with sub with age
-age_data <- prog_data[!is.na(prog_data$Q19),]
-
-
-# Get summary of age, mean et + plot
-age <- age_data$Q19
-summary(age)
-hist(age)
-table(age)
-
-# Get gender distribution
-table(age_data$Q18)
-#female <- subset(age_data, Q18 == "Female")
-
-# Get duration times
-time = age_data$`Duration (in seconds)`
-summary(time)
-meanT = mean(time)/60
-meanT
 
 
 # Create functions that replace value with 1 or 0

@@ -2,7 +2,7 @@ library(readr)
 library(dplyr)
 library(stringr)
 
-raw.data.folder <- '~/OneDrive - Linköpings universitet/projects - in progress/Touch Comm ASD/Data/'
+raw.data.folder <- '~/Library/CloudStorage/OneDrive - Linköpings universitet/projects - in progress/Touch Comm ASD/Data/'
 
 collate_data <- function(folder, pattern) {
   folder %>% 
@@ -19,7 +19,7 @@ if ( !dir.exists('data') ) { dir.create('data') }
 if ( !dir.exists('data/primary') ) { dir.create('data/primary') }
 
 raw.data.folder %>% 
-  collate_data('comm.*data\\.csv') %>% 
+  collate_data('comm.*data\\.csv') %>% View
   write_csv('data/primary/live-comm_collated.csv')
 
 raw.data.folder %>% 
